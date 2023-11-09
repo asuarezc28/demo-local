@@ -54,7 +54,7 @@
         <mat-card-actions>
             <p *ngIf="card?.distance">{{card?.distance}} km</p>
             <button mat-button (click)="openDirections(card?.coordinates)">GOOGLE MAP</button>
-            <button mat-button>SHOPS MAP</button>
+            <button (click)="openDialog()" mat-button>SHOPS MAP</button>
         </mat-card-actions>
     </mat-card>
 </div>

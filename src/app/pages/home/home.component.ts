@@ -19,13 +19,15 @@ import LayerList from '@arcgis/core/widgets/LayerList';
 import Expand from '@arcgis/core/widgets/Expand';
 import * as geometryService from '@arcgis/core/rest/geometryService';
 import DistanceParameters from '@arcgis/core/rest/support/DistanceParameters';
+import { ShopsMapModalComponent } from 'src/app/shared/components/shops-map-modal/shops-map-modal.component';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatCardModule, MatButtonModule, HttpClientModule,
-    MatRadioModule, MatSelectModule],
+    MatRadioModule, MatSelectModule, MatDialogModule],
   providers: [HttpClient],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -46,7 +48,8 @@ export class HomeComponent implements OnInit {
 
   position!: GeolocationPosition;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getPosition()
@@ -147,6 +150,15 @@ export class HomeComponent implements OnInit {
 
   generateDirectionsUrl(origin: string, destination: string): string {
     return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(ShopsMapModalComponent);
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
 }
