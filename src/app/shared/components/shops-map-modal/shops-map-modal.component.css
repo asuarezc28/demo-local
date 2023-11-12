@@ -1,0 +1,9 @@
+:host ::ng-deep .esri-ui.calcite-mode-light {
+    display: none;
+}
+
+.mapView {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+}

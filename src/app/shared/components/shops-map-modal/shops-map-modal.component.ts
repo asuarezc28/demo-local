@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import Map from '@arcgis/core/Map';
+import MapView from '@arcgis/core/views/MapView';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
+import Graphic from '@arcgis/core/Graphic';
+import Point from '@arcgis/core/geometry/Point';
 @Component({
   selector: 'app-shops-map-modal',
   standalone: true,
@@ -9,14 +15,121 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   templateUrl: './shops-map-modal.component.html',
   styleUrls: ['./shops-map-modal.component.css']
 })
-export class ShopsMapModalComponent {
-  constructor(public dialog: MatDialog) { }
+//@ViewChild('mapViewNode', { static: true })
 
-  //  openDialog() {
-  //const dialogRef = this.dialog.open(DialogContentExampleDialog);
+export class ShopsMapModalComponent implements OnInit {
+  public myMap!: Map;
+  public position: any;
+  @ViewChild('mapViewNode', { static: true }) mapViewEl: ElementRef | undefined;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    console.log('data', data);
+  }
 
-  //dialogRef.afterClosed().subscribe(result => {
-  //console.log(`Dialog result: ${result}`);
-  //});
-  //}
+
+  ngOnInit(): void {
+    this.initMap();
+
+  }
+
+  initMap(): Promise<any> {
+    this.position = this.data[1];
+    console.log('POSI', this.position);
+    const container = this.mapViewEl?.nativeElement;
+    this.myMap = new Map({
+      basemap: 'satellite',
+      layers: []
+    })
+
+    const view = new MapView({
+      container,
+      map: this.myMap,
+      zoom: 11,
+      center: [-17.93, 28.66],
+    });
+
+    const featureLayer = new FeatureLayer({
+      source: [], // Los datos se agregarán más adelante
+      objectIdField: 'id',
+      geometryType: 'point',
+      spatialReference: { wkid: 4326 },
+      fields: [
+        { name: 'id', type: 'oid' },
+        { name: 'title', type: 'string' },
+        { name: 'description', type: 'string' },
+        { name: 'image', type: 'string' },
+        { name: 'price', type: 'double' }
+      ],
+    });
+
+    this.myMap.add(featureLayer);
+
+    const pointUser = new Point({
+      x: this.position.coords.longitude,
+      y: this.position.coords.latitude,
+      spatialReference: { wkid: 4326 }
+    });
+
+
+    const markerSymbolUserUbication = {
+      type: 'simple-marker',
+      size: 20,
+      color: [226, 119, 40],
+      outline: {
+        color: [255, 255, 255],
+        width: 2,
+      },
+    };
+
+
+    const graphicUser = new Graphic({
+      geometry: pointUser,
+      symbol: markerSymbolUserUbication
+    });
+
+
+    featureLayer.source.add(graphicUser);
+
+    this.data[0].forEach((marker: { coordinates: { longitude: any; latitude: any; }; id: any; title: any; description: any; image: any; price: any; }) => {
+      const point = new Point({
+        x: marker.coordinates.longitude,
+        y: marker.coordinates.latitude,
+        spatialReference: { wkid: 4326 }
+      });
+
+      const attributes = {
+        id: marker.id,
+        title: marker.title,
+        description: marker.description,
+        image: marker.image,
+        price: marker.price
+      };
+
+      const graphic = new Graphic({
+        geometry: point,
+        attributes
+      });
+
+      featureLayer.source.add(graphic);
+    });
+
+
+
+
+
+    return view.when();
+  }
+
 }
+//  renderer: {
+//type: 'simple',
+//symbol: {
+//type: 'picture-marker',
+//url: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+//width: '32px',
+//height: '32px'
+//},
+//},
+//  popupTemplate: new PopupTemplate({
+//title: '{title}',
+//content: '<p>{description}</p><img src="{image}" alt="Product Image"><p>Price: ${price}</p>'
+//})

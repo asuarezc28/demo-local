@@ -20,7 +20,7 @@ import Expand from '@arcgis/core/widgets/Expand';
 import * as geometryService from '@arcgis/core/rest/geometryService';
 import DistanceParameters from '@arcgis/core/rest/support/DistanceParameters';
 import { ShopsMapModalComponent } from 'src/app/shared/components/shops-map-modal/shops-map-modal.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
 
   onOptionChange(event: any): void {
     this.searchTerm = event.value;
-    const newCards = this.cards.filter(card => {
+    const newCards = this.cards?.filter(card => {
       return card.category.toLowerCase().includes(event.value.toLowerCase());
     });
     if (this.position) {
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit {
 
 
   calculateDistances(cards: any) {
-    this.filteredCards = cards.map((card: any) => {
+    this.filteredCards = cards?.map((card: any) => {
       const myPromise = new Promise((resolve, reject) => {
         const testPointUserInTazacorte: Point = new Point({
           latitude: this.position.coords.latitude,
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
       return card;
     });
 
-    Promise.all(this.filteredCards.map(card => card.distance))
+    Promise.all(this.filteredCards?.map(card => card.distance))
       .then(() => {
         this.filteredCards.sort((a, b) => a.distance - b.distance);
       });
@@ -154,7 +154,13 @@ export class HomeComponent implements OnInit {
 
 
   openDialog() {
-    const dialogRef = this.dialog.open(ShopsMapModalComponent);
+    const dialogRef = this.dialog.open(ShopsMapModalComponent, {
+      data: [this.filteredCards, this.position],
+      //maxWidth: '100vw',
+      //height: '100%',
+      //width: '100%',
+      //panelClass: 'full-screen-modal',
+    });
 
     dialogRef.afterClosed().subscribe((result: any) => {
       console.log(`Dialog result: ${result}`);
