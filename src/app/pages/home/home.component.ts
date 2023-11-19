@@ -21,13 +21,14 @@ import * as geometryService from '@arcgis/core/rest/geometryService';
 import DistanceParameters from '@arcgis/core/rest/support/DistanceParameters';
 import { ShopsMapModalComponent } from 'src/app/shared/components/shops-map-modal/shops-map-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {MatMenu, MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatCardModule, MatButtonModule, HttpClientModule,
-    MatRadioModule, MatSelectModule, MatDialogModule],
+    MatRadioModule,MatMenuModule, MatSelectModule, MatDialogModule],
   providers: [HttpClient],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -153,9 +154,9 @@ export class HomeComponent implements OnInit {
   }
 
 
-  openDialog() {
+  openDialog(cardCoordinates: string) {
     const dialogRef = this.dialog.open(ShopsMapModalComponent, {
-      data: [this.filteredCards, this.position],
+      data: [this.filteredCards, this.position, cardCoordinates],
       //maxWidth: '100vw',
       //height: '100%',
       //width: '100%',

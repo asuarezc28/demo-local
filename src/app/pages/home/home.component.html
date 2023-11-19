@@ -10,6 +10,23 @@
         <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
       <mat-icon>share</mat-icon>
     </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+  <mat-icon>more_vert</mat-icon>
+</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+    <mat-icon>dialpad</mat-icon>
+    <span>Redial</span>
+  </button>
+            <button mat-menu-item disabled>
+    <mat-icon>voicemail</mat-icon>
+    <span>Check voice mail</span>
+  </button>
+            <button mat-menu-item>
+    <mat-icon>notifications_off</mat-icon>
+    <span>Disable alerts</span>
+  </button>
+        </mat-menu>
     </mat-toolbar>
 </p>
 
@@ -54,7 +71,7 @@
         <mat-card-actions>
             <p *ngIf="card?.distance">{{card?.distance}} km</p>
             <button mat-button (click)="openDirections(card?.coordinates)">GOOGLE MAP</button>
-            <button (click)="openDialog()" mat-button>SHOPS MAP</button>
+            <button (click)="openDialog(card?.id)" mat-button>SHOPS MAP</button>
         </mat-card-actions>
     </mat-card>
 </div>

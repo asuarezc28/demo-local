@@ -8,6 +8,7 @@ import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import Graphic from '@arcgis/core/Graphic';
 import Point from '@arcgis/core/geometry/Point';
+import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
 @Component({
   selector: 'app-shops-map-modal',
   standalone: true,
@@ -60,7 +61,7 @@ export class ShopsMapModalComponent implements OnInit {
         { name: 'price', type: 'double' }
       ],
     });
-
+    console.log('FEAA', featureLayer);
     this.myMap.add(featureLayer);
 
     const pointUser = new Point({
@@ -73,7 +74,7 @@ export class ShopsMapModalComponent implements OnInit {
     const markerSymbolUserUbication = {
       type: 'simple-marker',
       size: 20,
-      color: [226, 119, 40],
+      color: [0, 0, 255],
       outline: {
         color: [255, 255, 255],
         width: 2,
@@ -110,6 +111,38 @@ export class ShopsMapModalComponent implements OnInit {
       });
 
       featureLayer.source.add(graphic);
+      const query = featureLayer.createQuery();
+      query.where = "id = '" + this.data[2] + "'";
+      featureLayer.queryFeatures(query).then((response) => {
+        const features = response.features[0];
+        const Sym = new SimpleMarkerSymbol({
+          // type: "simple-marker",
+          color: "red",
+          size: 12,
+          outline: {
+            width: 0.5,
+            color: "red",
+          },
+        });
+        features.symbol = Sym;
+        // const graphs = view.graphics.items;
+        //const graphicsToDelete = graphs.filter(
+        //(graph) => graph.symbol?.size !== 12
+        //);
+        //graphicsToDelete.forEach((item) => {
+        //this.view.graphics.remove(item);
+        //});
+        //this.view.graphics.removeAll();
+        view.graphics.add(features);
+        view.goTo({
+          target: features,
+          zoom: 16,
+        });
+      });
+
+
+
+
     });
 
 
