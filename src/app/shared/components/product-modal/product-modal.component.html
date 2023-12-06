@@ -1,0 +1,19 @@
+<mat-dialog-content class="mat-typography" style="width: 600px; height: 400px;">
+    <form action="https://formsubmit.co/asuarezc91@gmail.com" method="POST" [formGroup]="productForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" formControlName="name">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" formControlName="email">
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" formControlName="description"></textarea>
+
+        <button type="submit" (click)="submitForm()">Submit</button>
+    </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+</mat-dialog-actions>

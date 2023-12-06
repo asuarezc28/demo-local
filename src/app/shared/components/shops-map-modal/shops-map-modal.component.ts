@@ -90,7 +90,7 @@ export class ShopsMapModalComponent implements OnInit {
 
     featureLayer.source.add(graphicUser);
 
-    this.data[0].forEach((marker: { coordinates: { longitude: any; latitude: any; }; id: any; title: any; description: any; image: any; price: any; }) => {
+    this.data[0]?.forEach((marker: { coordinates: { longitude: any; latitude: any; }; id: any; title: any; description: any; image: any; price: any; }) => {
       const point = new Point({
         x: marker.coordinates.longitude,
         y: marker.coordinates.latitude,
@@ -139,16 +139,7 @@ export class ShopsMapModalComponent implements OnInit {
           zoom: 16,
         });
       });
-
-
-
-
     });
-
-
-
-
-
     return view.when();
   }
 
