@@ -21,14 +21,17 @@ import * as geometryService from '@arcgis/core/rest/geometryService';
 import DistanceParameters from '@arcgis/core/rest/support/DistanceParameters';
 import { ShopsMapModalComponent } from 'src/app/shared/components/shops-map-modal/shops-map-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {MatMenu, MatMenuModule} from '@angular/material/menu';
+import { MatMenu, MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
+import { HomeDataService } from 'src/app/shared/services/home-data.service';
+import { ProductModalComponent } from 'src/app/shared/components/product-modal/product-modal.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule, FormsModule,
     MatFormFieldModule, MatInputModule, MatCardModule, MatButtonModule, HttpClientModule,
-    MatRadioModule,MatMenuModule, MatSelectModule, MatDialogModule],
+    MatRadioModule, MatMenuModule, MatSelectModule, MatDialogModule],
   providers: [HttpClient],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -46,11 +49,14 @@ export class HomeComponent implements OnInit {
     { value: 'monitor', viewValue: 'Monitores' },
     { value: 'joyas', viewValue: 'Joyas' },
   ];
-
+  isFavorite: boolean = false;
   position!: GeolocationPosition;
+  favCards: any[] = [];
 
   constructor(private http: HttpClient,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private router: Router,
+    private homeDataService: HomeDataService) { }
 
   ngOnInit(): void {
     this.getPosition()
@@ -168,4 +174,32 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  openFormDialog() {
+    const dialogRef = this.dialog.open(ProductModalComponent, {
+      data: [],
+      //maxWidth: '100vw',
+      //height: '100%',
+      //width: '100%',
+      //panelClass: 'full-screen-modal',
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+
+  navigateToFavList() {
+    console.log('before navigate favs', this.favCards);
+    this.homeDataService.sendCards(this.favCards);
+    this.router.navigate(['/favlist']);
+  }
+
+  toggleFavorite(card: { isFavorite: boolean; }, event: { stopPropagation: () => void; }) {
+    card.isFavorite = !card.isFavorite;
+    if (card?.isFavorite) {
+      this.favCards?.push(card);
+    }
+    event.stopPropagation();
+  }
 }
