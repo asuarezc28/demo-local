@@ -1,31 +1,29 @@
 <p>
     <mat-toolbar color="primary">
         <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    </button>
+        </button>
         <span>My App</span>
         <span class="example-spacer"></span>
-        <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
-    </button>
-        <button (click)="openFormDialog()" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon>share</mat-icon>
-    </button>
+        <!-- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+            <mat-icon>favorite</mat-icon>
+        </button>
+        <mat-icon>share</mat-icon> -->
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-  <mat-icon>more_vert</mat-icon>
-</button>
+            <mat-icon>more_vert</mat-icon>
+        </button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="navigateToFavList()">
-    <mat-icon>favorite</mat-icon>
-    <span>Favorites</span>
-  </button>
+                <mat-icon>favorite</mat-icon>
+                <span>Favorites</span>
+            </button>
             <button mat-menu-item disabled>
-    <mat-icon>voicemail</mat-icon>
-    <span>Check voice mail</span>
-  </button>
+                <mat-icon>voicemail</mat-icon>
+                <span>Check voice mail</span>
+            </button>
             <button mat-menu-item>
-    <mat-icon>notifications_off</mat-icon>
-    <span>Disable alerts</span>
-  </button>
+                <mat-icon>notifications_off</mat-icon>
+                <span>Disable alerts</span>
+            </button>
         </mat-menu>
     </mat-toolbar>
 </p>
@@ -34,6 +32,8 @@
     <mat-radio-button value="1">Search</mat-radio-button>
     <mat-radio-button value="2">Categories</mat-radio-button>
 </mat-radio-group>
+
+<button (click)="openFormDialog()" mat-raised-button color="primary">Need help?</button>
 
 <div class="container-search" *ngIf="selectedOption === '1'">
     <form class="example-form" #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm)">
@@ -59,7 +59,8 @@
 
 
 <div class="container">
-    <mat-card class="example-card" *ngFor="let card of (searchTerm ? filteredCards : cards)">
+    <mat-card (click)="navigateToDetailPage(card)" class="example-card"
+        *ngFor="let card of (searchTerm ? filteredCards : cards)">
         <mat-card-header>
             <div mat-card-avatar class="example-header-image"></div>
             <mat-card-title>{{ card.title }}</mat-card-title>
@@ -73,7 +74,7 @@
             <button (click)="openDialog(card?.id)" mat-button>SHOPS MAP</button>
             <button mat-button (click)="openDirections(card?.coordinates)">GOOGLE MAP</button>
             <button mat-icon-button (click)="toggleFavorite(card, $event)" [ngClass]="{'favorite': card?.isFavorite}">
-            <mat-icon>favorite</mat-icon>
+                <mat-icon>favorite</mat-icon>
             </button>
         </mat-card-actions>
     </mat-card>

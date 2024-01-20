@@ -195,6 +195,11 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/favlist']);
   }
 
+  navigateToDetailPage(card: any) {
+    this.homeDataService.sendCards([card]);
+    this.router.navigate(['/detail']);
+  }
+
   toggleFavorite(card: { isFavorite: boolean; }, event: { stopPropagation: () => void; }) {
     card.isFavorite = !card.isFavorite;
     if (card?.isFavorite) {
