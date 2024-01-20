@@ -17,23 +17,35 @@
 .container-search {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .search-container {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .example-form {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .example-full-width {
     flex: 1;
-    margin-right: 10px;
 }
 
 .favorite {
     color: red;
+}
+
+.radioButtonsBox {
+    display: flex;
+    flex: row;
+    justify-content: center;
+}
+
+.buttonSearch {
+    height: 100%;
 }
